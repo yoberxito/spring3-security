@@ -13,6 +13,7 @@ package med.voll.api.controller;/*
 import jakarta.validation.Valid;
 import med.voll.api.domain.usuarios.DatosAutentication;
 import med.voll.api.domain.usuarios.Usuario;
+import med.voll.api.infra.security.DatosTokenJwt;
 import med.voll.api.infra.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +40,8 @@ public class LoginController {
         var token= new UsernamePasswordAuthenticationToken(autentication.login(),autentication.contrasena());
 
         var authenticated=manager.authenticate(token);
+        var tokenJwt=tokenService.getAccesToken((Usuario) authenticated.getPrincipal());
 
-        return  ResponseEntity.ok(tokenService.getAccesToken((Usuario) authenticated.getPrincipal()));
+        return  ResponseEntity.ok(new DatosTokenJwt(tokenJwt));
     };
 }
